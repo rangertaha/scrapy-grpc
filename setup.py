@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='scrapy-grpc',
-    version='0.1.0',
+    version='1.0.0',
     url='https://github.com/rangertaha/scrapy-grpc',
     description='Scrapy extenstion to control spiders using gRPC',
     author='rangertaha',
