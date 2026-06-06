@@ -2,13 +2,12 @@ import logging
 
 from scrapy.exceptions import NotConfigured
 from scrapy import signals
-from scrapy.utils.reactor import listen_tcp
 
 
 logger = logging.getLogger(__name__)
 
 
-class WebService(object):
+class WebService:
 
     def __init__(self, crawler):
         if not crawler.settings.getbool('GRPC_ENABLED'):
