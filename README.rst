@@ -92,8 +92,8 @@ Clone the repository and install with the dev dependency group::
 Run the checks::
 
     $ ruff check src/ tests/
-    $ mypy src/
-    $ pytest
+    $ mypy src/ tests/
+    $ pytest --cov=scrapy_grpc
 
 
 License

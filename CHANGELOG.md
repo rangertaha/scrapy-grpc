@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Raised the minimum supported Python to 3.12 per SPEC 0 (supported range
+  is now 3.12–3.14): `requires-python = ">=3.12"`, trove classifiers, CI
+  matrix, and Ruff/mypy target versions all updated.
 - Upgraded dependency floors to the latest stable releases: `Scrapy>=2.17`
-  (was `>=2.16`) and `grpcio>=1.82` (was `>=1.81`).
-- Declared support for Python 3.14 (supported range is now 3.10–3.14,
-  matching Scrapy's own support window).
+  (was `>=2.16`) and `grpcio>=1.82` (was `>=1.81`); dev tooling floors
+  raised to `pytest>=9`, `ruff>=0.15`, `mypy>=2`.
+- Regenerated `uv.lock` for the 3.12+ baseline (drops the `exceptiongroup`
+  and `tomli` backports).
+- Declared support for Python 3.14.
 
 - Moved the package to the standard `src/` layout (`src/scrapy_grpc/`);
   the import path `scrapy_grpc` is unchanged.
@@ -24,10 +29,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `uv.lock` lockfile pinning the resolved development environment.
 - Type annotations and a `py.typed` marker (PEP 561).
-- Test suite (`tests/`) covering the `WebService` extension settings.
-- CI workflow running Ruff, mypy, and pytest across Python 3.10–3.14.
+- Test suite (`tests/`) covering the `WebService` extension: settings
+  handling, signal-handler registration, and log output (100% line
+  coverage of the implemented code, measured with `pytest-cov`).
+- CI workflow running Ruff, mypy, and pytest across Python 3.12–3.14.
 - Ruff and mypy configuration in `pyproject.toml`, plus a `dev`
-  dependency group.
+  dependency group (including `pytest-cov` for coverage reporting).
+- Module docstrings documenting that `scrapy_grpc.client` is a
+  placeholder: the gRPC service interface and client are not
+  implemented yet.
 
 ### Fixed
 

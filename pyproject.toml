@@ -7,7 +7,7 @@ name = "scrapy-grpc"
 version = "1.0.0"
 description = "Scrapy extension to control spiders using gRPC"
 readme = "README.rst"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "MIT"
 license-files = ["LICENSE.txt"]
 authors = [{ name = "rangertaha" }]
@@ -20,8 +20,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -36,26 +34,28 @@ dependencies = [
 Homepage = "https://github.com/rangertaha/scrapy-grpc"
 Repository = "https://github.com/rangertaha/scrapy-grpc"
 Issues = "https://github.com/rangertaha/scrapy-grpc/issues"
+Changelog = "https://github.com/rangertaha/scrapy-grpc/blob/master/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
-    "pytest>=8",
-    "ruff>=0.11",
-    "mypy>=1.15",
+    "pytest>=9",
+    "ruff>=0.15",
+    "mypy>=2",
+    "pytest-cov>=7",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/scrapy_grpc"]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 strict = true
 ignore_missing_imports = true
 
