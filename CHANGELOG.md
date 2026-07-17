@@ -7,43 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Implemented the gRPC service: the `WebService` extension now starts a
+  gRPC server (`grpcio`) when the crawler engine starts and stops it when
+  the engine stops. The `Crawler` service (defined in
+  `src/scrapy_grpc/pb/scrapy_grpc.proto`) exposes `GetStatus` (spider
+  name, running state, items scraped), `GetStats` (stats collector
+  snapshot), and `StopCrawler` (graceful shutdown via the Twisted
+  reactor).
+- `scrapy_grpc.CrawlerClient`: a blocking Python client for the service,
+  usable as a context manager, re-exported with `WebService` from the
+  package root.
+- Runtime dependencies on `grpcio` and `protobuf`; dev dependency on
+  `grpcio-tools` for regenerating the stubs.
+- Test suite (`tests/`) covering settings handling, signal-handler
+  registration, and an end-to-end round trip exercising the client
+  against a live in-process server.
+- `uv.lock` lockfile pinning the resolved development environment.
+- Type annotations and a `py.typed` marker (PEP 561).
+- CI workflow running Ruff, mypy, and pytest across Python 3.12–3.14.
+- Ruff and mypy configuration in `pyproject.toml`, plus a `dev`
+  dependency group (including `pytest-cov` for coverage reporting).
+
 ### Changed
 
-- Raised the minimum supported Python to 3.12 per SPEC 0 (supported range
-  is now 3.12–3.14): `requires-python = ">=3.12"`, trove classifiers, CI
-  matrix, and Ruff/mypy target versions all updated.
+- **Breaking:** raised the minimum supported Python to 3.12 per SPEC 0
+  (supported range is now 3.12–3.14): `requires-python = ">=3.12"`,
+  trove classifiers, CI matrix, and Ruff/mypy target versions all
+  updated. Declared support for Python 3.14.
+- `GRPC_PORT` is now read with `settings.getint()` (string values from
+  the CLI/environment work), and setting it to `0` binds a free ephemeral
+  port, with `WebService.port` updated to the bound port.
+- `item_scraped` now counts scraped items (surfaced via `GetStatus`)
+  instead of logging each item at INFO level.
 - Upgraded dependency floors to the latest stable releases: `Scrapy>=2.17`
   (was `>=2.16`); dev tooling floors raised to `pytest>=9`, `ruff>=0.15`,
   `mypy>=2`.
-- Regenerated `uv.lock` for the 3.12+ baseline (drops the `exceptiongroup`
-  and `tomli` backports).
-- Declared support for Python 3.14.
-
 - Moved the package to the standard `src/` layout (`src/scrapy_grpc/`);
   the import path `scrapy_grpc` is unchanged.
 - Modernized packaging to PEP 621 `pyproject.toml` with the `hatchling`
   build backend, and set up PyPI publishing via GitHub Actions with
   Trusted Publishing (OIDC).
-
-### Added
-
-- `uv.lock` lockfile pinning the resolved development environment.
-- Type annotations and a `py.typed` marker (PEP 561).
-- Test suite (`tests/`) covering the `WebService` extension: settings
-  handling, signal-handler registration, and log output (100% line
-  coverage of the implemented code, measured with `pytest-cov`).
-- CI workflow running Ruff, mypy, and pytest across Python 3.12–3.14.
-- Ruff and mypy configuration in `pyproject.toml`, plus a `dev`
-  dependency group (including `pytest-cov` for coverage reporting).
-- Module docstrings documenting that `scrapy_grpc.client` is a
-  placeholder: the gRPC service interface and client are not
-  implemented yet.
-
-### Removed
-
-- Unused `grpcio` runtime dependency: nothing in the package imports
-  `grpc` yet (the gRPC client is an unimplemented placeholder). It will
-  be re-added when the gRPC service and client are implemented.
 
 ### Fixed
 

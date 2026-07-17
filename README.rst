@@ -19,15 +19,17 @@ scrapy-grpc
    :alt: CI status
 
 scrapy-grpc is a Scrapy_ extension to control a running Scrapy web crawler
-via gRPC_. It hooks into the crawler's lifecycle signals and exposes the
-main ``Crawler`` object over a gRPC service.
+via gRPC_. It starts a gRPC server alongside the crawler engine and exposes
+a ``Crawler`` service with three RPCs:
 
-.. note::
-   This project is under active development. The extension currently wires
-   up the crawler signals; the gRPC service interface and Python client are
-   still being built out. Until they are, the package does not depend on
-   ``grpcio`` — it will return as a runtime dependency once the gRPC
-   service and client are implemented.
+- ``GetStatus`` — the running spider's name, whether the engine is
+  running, and the number of items scraped so far.
+- ``GetStats`` — a snapshot of the crawler's stats collector.
+- ``StopCrawler`` — request a graceful crawler shutdown.
+
+The service interface is defined in
+``src/scrapy_grpc/pb/scrapy_grpc.proto``, and a matching blocking Python
+client, ``scrapy_grpc.CrawlerClient``, is included.
 
 
 Installation
@@ -52,6 +54,26 @@ Then enable the extension by setting `GRPC_ENABLED`_ to ``True``.
 
 The gRPC server will listen on the interface and port specified by
 `GRPC_HOST`_ and `GRPC_PORT`_ (by default, ``127.0.0.1:6080``).
+
+
+Usage
+=====
+
+With the extension enabled, control the running crawler from any process
+using ``CrawlerClient``::
+
+    from scrapy_grpc import CrawlerClient
+
+    with CrawlerClient(host="127.0.0.1", port=6080) as client:
+        status = client.status()
+        print(status.spider, status.running, status.items_scraped)
+
+        print(client.stats())     # dict[str, str] snapshot of crawler stats
+
+        client.stop_crawler()     # graceful shutdown, like a single Ctrl-C
+
+Any gRPC client in any language can talk to the service; generate stubs
+from ``src/scrapy_grpc/pb/scrapy_grpc.proto``.
 
 
 Settings
@@ -79,7 +101,8 @@ GRPC_PORT
 
 Default: ``6080``
 
-The port to use for the gRPC service.
+The port to use for the gRPC service. Set it to ``0`` to bind a free
+ephemeral port.
 
 
 Development
@@ -96,6 +119,12 @@ Run the checks::
     $ ruff check src/ tests/
     $ mypy src/ tests/
     $ pytest --cov=scrapy_grpc
+
+After changing ``scrapy_grpc.proto``, regenerate the gRPC stubs::
+
+    $ python -m grpc_tools.protoc -I src \
+          --python_out=src --grpc_python_out=src \
+          src/scrapy_grpc/pb/scrapy_grpc.proto
 
 
 License

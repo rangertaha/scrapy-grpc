@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "scrapy-grpc"
-version = "1.0.0"
+version = "2.0.0"
 description = "Scrapy extension to control spiders using gRPC"
 readme = "README.rst"
 requires-python = ">=3.12"
@@ -26,6 +26,8 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
 ]
 dependencies = [
+    "grpcio>=1.82.1",
+    "protobuf>=7.35.1",
     "Scrapy>=2.17",
 ]
 
@@ -41,6 +43,7 @@ dev = [
     "ruff>=0.15",
     "mypy>=2",
     "pytest-cov>=7",
+    "grpcio-tools>=1.82.1",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -49,6 +52,7 @@ packages = ["src/scrapy_grpc"]
 [tool.ruff]
 target-version = "py312"
 line-length = 88
+extend-exclude = ["*_pb2.py", "*_pb2_grpc.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -57,6 +61,18 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+exclude = ["_pb2\\.py$", "_pb2_grpc\\.py$"]
+
+# Generated protobuf/gRPC modules are untyped; treat them as Any.
+[[tool.mypy.overrides]]
+module = "scrapy_grpc.pb.*"
+follow_imports = "skip"
+ignore_errors = true
+
+# CrawlerServicer subclasses the (untyped) generated servicer base class.
+[[tool.mypy.overrides]]
+module = "scrapy_grpc.webservice"
+disallow_subclassing_any = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

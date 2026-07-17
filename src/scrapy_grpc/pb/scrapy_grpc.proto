@@ -1,0 +1,48 @@
+// gRPC service interface for controlling a running Scrapy crawler.
+//
+// Regenerate the Python stubs from the repository root with:
+//
+//   python -m grpc_tools.protoc -I src \
+//       --python_out=src --grpc_python_out=src \
+//       src/scrapy_grpc/pb/scrapy_grpc.proto
+
+syntax = "proto3";
+
+package scrapy_grpc;
+
+// Control and inspect a running Scrapy crawler.
+service Crawler {
+  // Report which spider is running and how many items it has scraped.
+  rpc GetStatus (StatusRequest) returns (StatusResponse);
+
+  // Return a snapshot of the crawler's stats collector.
+  rpc GetStats (StatsRequest) returns (StatsResponse);
+
+  // Ask the crawler to shut down gracefully.
+  rpc StopCrawler (StopRequest) returns (StopResponse);
+}
+
+message StatusRequest {}
+
+message StatusResponse {
+  // Name of the running spider, or empty if none is attached yet.
+  string spider = 1;
+  // True while the crawler engine is running.
+  bool running = 2;
+  // Number of items scraped since the engine started.
+  int64 items_scraped = 3;
+}
+
+message StatsRequest {}
+
+message StatsResponse {
+  // Crawler stats, with values rendered as strings.
+  map<string, string> stats = 1;
+}
+
+message StopRequest {}
+
+message StopResponse {
+  // True if a graceful shutdown was initiated.
+  bool stopping = 1;
+}
