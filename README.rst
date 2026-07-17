@@ -25,7 +25,9 @@ main ``Crawler`` object over a gRPC service.
 .. note::
    This project is under active development. The extension currently wires
    up the crawler signals; the gRPC service interface and Python client are
-   still being built out.
+   still being built out. Until they are, the package does not depend on
+   ``grpcio`` — it will return as a runtime dependency once the gRPC
+   service and client are implemented.
 
 
 Installation

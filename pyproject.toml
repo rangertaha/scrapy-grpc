@@ -27,7 +27,6 @@ classifiers = [
 ]
 dependencies = [
     "Scrapy>=2.17",
-    "grpcio>=1.82",
 ]
 
 [project.urls]

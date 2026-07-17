@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   is now 3.12–3.14): `requires-python = ">=3.12"`, trove classifiers, CI
   matrix, and Ruff/mypy target versions all updated.
 - Upgraded dependency floors to the latest stable releases: `Scrapy>=2.17`
-  (was `>=2.16`) and `grpcio>=1.82` (was `>=1.81`); dev tooling floors
-  raised to `pytest>=9`, `ruff>=0.15`, `mypy>=2`.
+  (was `>=2.16`); dev tooling floors raised to `pytest>=9`, `ruff>=0.15`,
+  `mypy>=2`.
 - Regenerated `uv.lock` for the 3.12+ baseline (drops the `exceptiongroup`
   and `tomli` backports).
 - Declared support for Python 3.14.
@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module docstrings documenting that `scrapy_grpc.client` is a
   placeholder: the gRPC service interface and client are not
   implemented yet.
+
+### Removed
+
+- Unused `grpcio` runtime dependency: nothing in the package imports
+  `grpc` yet (the gRPC client is an unimplemented placeholder). It will
+  be re-added when the gRPC service and client are implemented.
 
 ### Fixed
 
